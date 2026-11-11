@@ -8,9 +8,17 @@
 <body>
     <p>here is soe text to test the dark mode option</p>
     <p>alright let try the live streaming part</p>
-    
-    <video id="cameraFeed" autoplay playsinline controls style="width: 100%; max-width: 640px;"></video>
+    <button onclick="onCamera()" id="onCameraButton">Turn on Camera</button>
+    <button onclick="offCamera()" id="offCameraButton">Turn off Camera</button>
+    <video id="cameraFeed" autoplay playsinline></video>
 <button onclick="darkmode()">Dark mode</button>
+    <div>
+        <button id="startRecording" type="button" disabled>Start recording</button>
+        <button id="stopRecording" type="button" disabled>Stop recording</button>
+        <p id="recordingStatus" aria-live="polite">Starting camera...</p>
+        <a id="downloadRecording" hidden>Download recording</a>
+        <p id="timer">00:00</p>
+    </div>
 
     <script src="script.js"></script>
 </body>
