@@ -4,10 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        #cameraFeed {
+    width: 640px;
+    height: 360px;
+    object-fit: contain;
+}
+    </style>
 </head>
 <body>
     <p>here is soe text to test the dark mode option</p>
     <p>alright let try the live streaming part</p>
+    <label for="videoQuality">Video quality:</label>
+    <select id="videoQuality">
+        <option value="480">480p</option>
+        <option value="720" selected>720p</option>
+        <option value="1080">1080p</option>
+    </select>
     <button onclick="onCamera()" id="onCameraButton">Turn on Camera</button>
     <button onclick="offCamera()" id="offCameraButton">Turn off Camera</button>
     <video id="cameraFeed" autoplay playsinline></video>

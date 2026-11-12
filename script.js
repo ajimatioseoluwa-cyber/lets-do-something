@@ -10,6 +10,13 @@ const timerElement = document.getElementById("timer");
 const downloadLink = document.getElementById("downloadRecording");
 const onCameraButton = document.getElementById("onCameraButton"); 
 const offCameraButton = document.getElementById("offCameraButton");
+const videoQuality = document.getElementById("videoQuality");
+
+const qualityPresets = {
+    480: { width: 640, height: 480, bitrate: 1_000_000 },
+    720: { width: 1280, height: 720, bitrate: 2_500_000 },
+    1080: { width: 1920, height: 1080, bitrate: 5_000_000 }
+};
 
 let recorder;
 let recordedChunks = [];
@@ -22,11 +29,22 @@ function onCamera() {
     live.style.display = "block";
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
         recordingStatus.textContent = "Camera recording is not supported in this browser.";
+        onCameraButton.disabled = false;
+        offCameraButton.disabled = true;
     } else {
-    navigator.mediaDevices.getUserMedia({ video: true })
+    const preset = qualityPresets[videoQuality.value];
+    navigator.mediaDevices.getUserMedia({
+        video: {
+            width: { ideal: preset.width },
+            height: { ideal: preset.height }
+        }
+    })
         .then(stream => {
             live.srcObject = stream;
-            recorder = new MediaRecorder(stream);
+            recorder = new MediaRecorder(stream, {
+                videoBitsPerSecond: preset.bitrate
+            });
+            videoQuality.disabled = true;
 
             recorder.addEventListener("dataavailable", event => {
                 if (event.data.size > 0) {
@@ -50,6 +68,9 @@ function onCamera() {
         .catch(error => {
             console.error("Error accessing camera:", error);
             recordingStatus.textContent = "Could not access the camera. Check browser permissions.";
+            onCameraButton.disabled = false;
+            offCameraButton.disabled = true;
+            live.style.display = "none";
         });
     }
     
@@ -57,11 +78,13 @@ function onCamera() {
 }
 
 function offCamera() {
-onCameraButton.disabled = false;
+    onCameraButton.disabled = false;
     offCameraButton.disabled = true;
-    
+    videoQuality.disabled = false;
+
     live.srcObject.getTracks().forEach(track => track.stop());
-live.style.display = "none";
+    live.srcObject = null;
+    live.style.display = "none";
 }
 startButton.addEventListener("click", () => {
     if (!recorder || recorder.state !== "inactive") return;
