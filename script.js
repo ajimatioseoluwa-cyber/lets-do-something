@@ -11,7 +11,29 @@ const downloadLink = document.getElementById("downloadRecording");
 const onCameraButton = document.getElementById("onCameraButton"); 
 const offCameraButton = document.getElementById("offCameraButton");
 const videoQuality = document.getElementById("videoQuality");
+const pass = document.getElementById("passwordInput");
+const visible = document.getElementById("visible")
+const locate = document.getElementById("locate")
 
+function locateMe() {
+    navigator.geolocation.getCurrentPosition (
+        position => {
+            locate.innerHTML=`<p>Latitude:${position.coords.latitude} <br>
+            longitude:${position.coords.longitude}
+            </p>`
+        },
+        error => console.error(error, "permission denied or error")
+    )
+}
+
+function toggle() {
+    if (pass.type=="password") {
+        pass.type="text"
+        visible.innerText='hide'
+    } else {
+        pass.type="password"
+    }
+}
 const qualityPresets = {
     480: { width: 640, height: 480, bitrate: 1_000_000 },
     720: { width: 1280, height: 720, bitrate: 2_500_000 },
